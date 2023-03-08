@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="{% url 'submit'%}" method="post">{% csrf_token %}
+        <div >
+            <p class="text-[18pt] font-bold text-white">Task Name</p>
+            <input class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" type="text" name="task_name" maxlength="32" required>
+            <br>
+        </div>
+        <div class="grid grid-cols-2 gap-x-5">
+            <div>
+                <p class="text-[18pt] font-bold text-white">Task Category</p>
+                <select  class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" name="task_category">
+                    <option value="Personal">Personal</option>
+                    <option value="Work">Work</option>
+                </select>
+            </div>
+            <div>
+                <p class="text-[18pt] font-bold text-white">Completion Date</p>
+                <input class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" type="datetime-local" name="date_completion" required>
+            </div>
+        </div>
+        <div class="mb-6">
+            <p class="text-[18pt] font-bold text-white">Task Description</p>
+            <textarea class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" maxlength="50" name="task_description"></textarea>
+        </div>
+        <a class=" bg-palette-gray75 px-4 py-2  rounded-2xl text-palette-gray25" href="{% url 'home'%}">Back</a>
+        <button class=" bg-palette-gray50 ml-2 px-4 py-2 rounded-2xl font-semibold" type="submit">Add Task</button>
+    </form> 
+
+{% endblock %}

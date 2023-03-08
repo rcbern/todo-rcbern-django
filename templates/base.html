@@ -1,0 +1,25 @@
+{%load static %}
+<!DOCTYPE html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="{% static '/script.js' %}"></script>
+        <link rel="stylesheet" href="{% static '/style.css' %}">
+        <title>Todo List</title>
+    </head>
+
+    <body class="bg-palette-gray100 h-full">
+        <div class="flex flex-col pt-16 md:pt-36 md:pb-24">
+            <div class="flex justify-center h-full items-center">
+                <div class="grid grid-cols-1 gap-y-3 w-4/5 md:w-3/4 lg:w-2/5">
+                    {% block content %}
+                
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

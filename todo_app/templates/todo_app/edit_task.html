@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="{% url 'save' task.id%}" method="post">{% csrf_token %}
+        <div >
+            <p class="text-[18pt] font-bold text-white">Task Name</p>
+            <input class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" type="text" name="task_name" maxlength="32" placeholder="{{ task.task_name }}">
+            <br>
+        </div>
+        <div class="grid grid-cols-2 gap-x-5">
+            <div>
+                <p class="text-[18pt] font-bold text-white">Task Category</p>
+                <select  class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" name="task_category">
+                    {% if task.task_category == 'Personal'%}
+                    <option value="Personal" selected>Personal</option>
+                    <option value="Work">Work</option>
+                    {% else %}
+                    <option value="Personal">Personal</option>
+                    <option value="Work" selected>Work</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div>
+                <p class="text-[18pt] font-bold text-white">Completion Date</p>
+                <input class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" type="datetime-local" name="date_completion">
+                <label class="text-[10pt] ml-3 text-palette-gray50">{{ task.date_completion }}</label>
+            </div>
+        </div>
+        <div class="mb-6">
+            <p class="text-[18pt] font-bold text-white">Task Description</p>
+            <textarea class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" name="task_description"  placeholder="{{ task.task_description }}"></textarea>
+        </div>
+        <a class=" bg-palette-gray75 px-4 py-2  rounded-2xl text-palette-gray25" href="{% url 'detail' task.id %}">Back</a>
+        <button class=" bg-palette-gray50 ml-2 px-4 py-2 rounded-2xl font-semibold" type="submit">Save Changes</button>
+    </form> 
+
+{% endblock %}

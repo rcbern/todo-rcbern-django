@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="md:grid grid-cols-5">
+        <p class="text-[24pt] font-bold text-white col-span-4 mb-3">To-do list</p>
+        <div class="col-span-1 flex md:items-center md:place-content-center">
+            <form action="{% url 'filter'%}" method="post">{% csrf_token %}
+                <select class=" bg-palette-gray75 text-white font-semibold px-4 py-2 text-center rounded-2xl drop-shadow-xl" name="task_filter" onchange="this.form.submit()">
+                    <option value="">Filters</option>
+                    <option value="all">All</option>
+                    <option value="personal">Personal</option>
+                    <option value="work">Work</option>
+                </select>
+            </form>
+        </div>
+    </div>
+    {% for task in tasks_list %}
+    <a href="{% url 'detail' task.id %}">
+        <div class="my-2 p-6 bg-palette-gray75 rounded-2xl drop-shadow-xl">
+            <div class="grid grid-cols-5">
+                <div class="col-span-4">
+                    <p class="text-[18pt] font-bold text-white">{{ task.task_name }}</p>
+                    <p class="text-[10pt] text-palette-gray50">{{ task.date_completion }}</p>
+                </div>
+                <div class="col-span-1 flex justify-center items-center">
+                    {% if task.is_completed == False %}
+                    <span class="text-yellow-300 text-[10pt]">To Do</span>
+                    {% else %}
+                    <span class="text-green-300 text-[10pt]">Completed</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+    <div class="flex mt-3">
+        <a class=" bg-palette-gray50 font-semibold px-4 py-2  rounded-2xl drop-shadow-xl" href="{% url 'create' %}">Create Task</a>
+    </div>
+{% endblock %}
