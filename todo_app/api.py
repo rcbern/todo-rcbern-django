@@ -1,60 +1,58 @@
-from datetime import date
 from django.shortcuts import get_object_or_404
-from ninja import NinjaAPI, Schema
+from ninja import NinjaAPI
 from todo_app.models import Task
-
+import todo_app.schema as schema
 
 api = NinjaAPI()
 
 
-class TaskIn(Schema):
-    task_name: str
-    task_description: str
-    task_category: str = 'Personal'
-    is_completed: bool = False
-    date_completion: date
-    date_creation: date
-
-
-class TaskOut(Schema):
-    id: int
-    task_name: str
-    task_description: str
-    task_category: str
-    is_completed: bool
-    date_completion: date
-    date_creation: date
-
-
-@api.get('/all', response=list[TaskOut])
+@api.get('/all', response=list[schema.TaskOut])
 def all_task(request):
     task_temp = Task.objects.all()
     return task_temp
 
 
-@api.get('/get', response=TaskOut)
+@api.get('/get', response=schema.TaskOut)
 def get_task(request, task_id: int):
     task_temp = get_object_or_404(Task, id=task_id)
     return task_temp
 
 
-@api.post('/post', response=TaskOut)
-def post_task(request, payload: TaskIn):
-    task_temp = Task.objects.create(**payload.dict())
+@api.get('/filter', response={200: list[schema.TaskOut], 500: schema.Message})
+def filter_task(request, filter: str):
+    if filter == 'Personal':
+        task_temp = Task.filters.personal()
+    elif filter == 'Work':
+        task_temp = Task.filters.work()
+    else:
+        return 500, schema.Message(message=f"{filter} is not a valid filter.")
+    return 200, task_temp
+
+
+@api.post('/post', response=schema.TaskOut)
+def post_task(request, payload: schema.TaskIn):
+    data = payload.dict(exclude_none=True)
+    task_temp = Task.objects.create(**data)
     return task_temp
 
 
-@api.put('/put')
-def update_task(request, task_id: int, payload: TaskIn):
+@api.put('/put', response=schema.TaskOut)
+def update_task(request, task_id: int, payload: schema.TaskPut):
     task_temp = get_object_or_404(Task, id=task_id)
-    for key, value in payload.dict().items():
+    data = payload.dict(exclude_unset=True, exclude_none=True)
+    for key, value in data.items():
         setattr(task_temp, key, value)
     task_temp.save()
-    return {"success": True}
+    return task_temp
 
 
 @api.delete("/del")
-def delete_task(request, task_id: int):
-    task_temp = get_object_or_404(Task, id=task_id)
-    task_temp.delete()
-    return {"success": True}
+def delete_task(request, task_id: str):
+    if task_id == 'all':
+        Task.objects.all().delete()
+        return {"success": True}
+    else:
+        task_id = int(task_id)
+        task_temp = get_object_or_404(Task, id=task_id)
+        task_temp.delete()
+        return {"success": True}
