@@ -15,17 +15,19 @@ class TaskQuerySet(models.QuerySet):
     def to_complete(self):
         return self.filter(is_completed=False)
 
+
 class Task(models.Model):
     class TaskCategory(models.TextChoices):
         PERSONAL = 'Personal'
         WORK = 'Work'
 
-    task_name=models.CharField(max_length=32)
+    task_name = models.CharField(max_length=32)
     task_description = models.TextField(max_length=50, null=True, blank=True)
-    task_category = models.CharField(max_length=8, choices=TaskCategory.choices, default=TaskCategory.PERSONAL)
-    is_completed=models.BooleanField(default=False)
-    date_completion=models.DateTimeField(default=timezone.now)
-    date_creation=models.DateTimeField(auto_now_add=True)
+    task_category = models.CharField(max_length=8, choices=TaskCategory.choices,
+                                     default=TaskCategory.PERSONAL)
+    is_completed = models.BooleanField(default=False)
+    date_completion = models.DateTimeField(default=timezone.now)
+    date_creation = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
     filters = TaskQuerySet.as_manager()
