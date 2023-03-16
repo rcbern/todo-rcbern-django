@@ -20,9 +20,9 @@ def get_task(request, task_id: int):
 
 @api.get('/filter', response={200: list[schema.TaskOut], 500: schema.Message})
 def filter_task(request, filter: str):
-    if filter == 'Personal':
+    if filter == 'personal':
         task_temp = Task.filters.personal()
-    elif filter == 'Work':
+    elif filter == 'work':
         task_temp = Task.filters.work()
     else:
         return 500, schema.Message(message=f"{filter} is not a valid filter.")

@@ -4,10 +4,10 @@ from django.utils import timezone
 
 class TaskQuerySet(models.QuerySet):
     def personal(self):
-        return self.filter(task_category__exact='Personal')
+        return self.filter(task_category__exact='personal')
 
     def work(self):
-        return self.filter(task_category__exact='Work')
+        return self.filter(task_category__exact='work')
 
     def is_completed(self):
         return self.filter(is_completed=True)
@@ -18,8 +18,8 @@ class TaskQuerySet(models.QuerySet):
 
 class Task(models.Model):
     class TaskCategory(models.TextChoices):
-        PERSONAL = 'Personal'
-        WORK = 'Work'
+        PERSONAL = 'personal'
+        WORK = 'work'
 
     task_name = models.CharField(max_length=32)
     task_description = models.TextField(max_length=50, null=True, blank=True)

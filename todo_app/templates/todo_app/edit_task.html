@@ -12,11 +12,11 @@
                 <p class="text-[18pt] font-bold text-white">Task Category</p>
                 <select  class="my-2 p-6 bg-palette-gray75 rounded-2xl w-full text-white" name="task_category">
                     {% if task.task_category == 'Personal'%}
-                    <option value="Personal" selected>Personal</option>
-                    <option value="Work">Work</option>
+                    <option value="personal" selected>Personal</option>
+                    <option value="work">Work</option>
                     {% else %}
-                    <option value="Personal">Personal</option>
-                    <option value="Work" selected>Work</option>
+                    <option value="personal">Personal</option>
+                    <option value="work" selected>Work</option>
                     {% endif %}
                 </select>
             </div>
