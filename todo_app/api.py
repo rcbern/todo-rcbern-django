@@ -18,15 +18,17 @@ def get_task(request, task_id: int):
     return task_temp
 
 
-@api.get('/filter', response={200: list[schema.TaskOut], 500: schema.Message})
+@api.get('/filter', response={200: list[schema.TaskOut], 400: schema.Message})
 def filter_task(request, filter: str):
     if filter == 'personal':
         task_temp = Task.filters.personal()
     elif filter == 'work':
         task_temp = Task.filters.work()
+    elif filter == 'all':
+        task_temp = Task.objects.all()
     else:
-        return 500, schema.Message(message=f"{filter} is not a valid filter.")
-    return 200, task_temp
+        return 400, schema.Message(message=f"{filter} is not a valid filter.")
+    return task_temp
 
 
 @api.post('/post', response=schema.TaskOut)
@@ -37,7 +39,7 @@ def post_task(request, payload: schema.TaskIn):
 
 
 @api.put('/put', response=schema.TaskOut)
-def update_task(request, task_id: int, payload: schema.TaskPut):
+def put_task(request, task_id: int, payload: schema.TaskPut):
     task_temp = get_object_or_404(Task, id=task_id)
     data = payload.dict(exclude_unset=True, exclude_none=True)
     for key, value in data.items():
@@ -45,9 +47,15 @@ def update_task(request, task_id: int, payload: schema.TaskPut):
     task_temp.save()
     return task_temp
 
+@api.put('/upd')
+def upd_task(request, task_id: int):
+    task_temp = get_object_or_404(Task, id=task_id)
+    task_temp.is_completed = not task_temp.is_completed
+    task_temp.save()
+    return {"success": True}
 
 @api.delete("/del")
-def delete_task(request, task_id: str):
+def del_task(request, task_id: str):
     if task_id == 'all':
         Task.objects.all().delete()
         return {"success": True}
